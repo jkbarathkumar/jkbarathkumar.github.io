@@ -16,7 +16,7 @@ function addItem(e) {
     e.preventDefault();
 
     if (submit.value != "Submit") {
-        editItem.target.parentNode.childNodes[0].data = document.getElementById("item").value;
+        editItem.target.parentNode.childNodes[1].data = document.getElementById("item").value;
 
         submit.value = "Submit";
         document.getElementById("item").value = "";
@@ -50,12 +50,37 @@ function addItem(e) {
     checkbox.type = "checkbox";
     checkbox.className = "checkbox float-left"; // Added some margin
 
+    // Get the current date and time
+    let currentTime = new Date();
+    let formattedDateAndTime = formatDateAndTime(currentTime);
+
+    // Add the time to the task
+    let timeSpan = document.createElement("span");
+    timeSpan.className = "task-time";
+    timeSpan.appendChild(document.createTextNode(formattedDateAndTime));
+
     li.appendChild(checkbox);
     li.appendChild(document.createTextNode(newItem));
+    li.appendChild(timeSpan); // Add the time to the task
     li.appendChild(deleteButton);
     li.appendChild(editButton);
 
     items.appendChild(li);
+}
+
+// Function to format the date and time as "January 7, 2025, 2:30 PM"
+function formatDateAndTime(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    let formattedDate = date.toLocaleDateString(undefined, options); // Get the date in a readable format
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // The hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    let strTime = hours + ':' + minutes + ' ' + ampm;
+
+    return `${formattedDate}, ${strTime}`; // Return the date and time together
 }
 
 function handleTaskAction(e) {
